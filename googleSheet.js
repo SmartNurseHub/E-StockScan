@@ -1,5 +1,8 @@
 const { GoogleSpreadsheet } = require("google-spreadsheet");
-const creds = require("./service-account.json");
+const creds = {
+  client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+  private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n")
+};
 
 const SHEET_ID = "1e3H-qHTakyC_HT9l5cSmFjLEE6BjlDJAkleL3m3fUUs";
 
@@ -17,7 +20,7 @@ async function getMovement(qr) {
 
   const rows = await sheet.getRows();
   const item = rows.find(r =>
-  (r.MOVEMENT_ID || r.movement_id) === id
+  (r.MOVEMENT_ID || r.movement_id) === qr
 );
   if (!item) return null;
 
